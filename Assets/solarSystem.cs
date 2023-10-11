@@ -14,16 +14,29 @@ public class solarSystem : MonoBehaviour
         Time.timeScale = startingSpeed;
         allBodies = GameObject.FindGameObjectsWithTag("Celestial");
         var sun = GameObject.Find("Sun");
-        foreach (var body in allBodies) {
+        foreach (var body in allBodies)
+        {
             if (body == sun)
                 continue;
-            
+
             body.GetComponent<Rigidbody>().velocity = Mathf.Sqrt(G * sun.GetComponent<Rigidbody>().mass / Vector3.Distance(sun.transform.position, body.transform.position)) * Vector3.forward;
         }
 
         var moon = allBodies.First(o => o.name == "Moon");
         var earth = allBodies.First(o => o.name == "Earth");
-        moon.GetComponent<Rigidbody>().velocity -= Mathf.Sqrt(G * earth.GetComponent<Rigidbody>().mass/Vector3.Distance(earth.transform.position, moon.transform.position)) * Vector3.forward;
+        moon.GetComponent<Rigidbody>().velocity -= Mathf.Sqrt(G * earth.GetComponent<Rigidbody>().mass / Vector3.Distance(earth.transform.position, moon.transform.position)) * Vector3.forward;
+
+        PrintVelocities();
+    }
+
+    private void PrintVelocities()
+    {
+        foreach (var body in allBodies)
+        {
+
+            var vel = body.GetComponent<Rigidbody>().velocity;
+            print($"{vel} for body {body.name}");
+        }
     }
 
     void Update ()
@@ -52,6 +65,9 @@ public class solarSystem : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E)){
             G += 5;
         }
+
+        if (Input.GetKeyDown(KeyCode.P))
+            PrintVelocities();
     }
 
     void FixedUpdate()
